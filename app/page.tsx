@@ -186,6 +186,51 @@ export default function CyberhaUltimate2026() {
         .animate-marquee { animation: marquee 40s linear infinite; }
         .animate-marquee:hover { animation-play-state: paused; }
       `}</style>
+    </div>// أضف هذه الدوال والمكونات داخل كود صفحتك الحالي (page.tsx)
+
+// 1. ميزة توليد كلمة سر قوية (أداة توعية تفاعلية)
+const [generatedPass, setGeneratedPass] = useState("");
+const generatePassword = () => {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+  let retVal = "";
+  for (let i = 0; i < 16; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * charset.length));
+  }
+  setGeneratedPass(retVal);
+};
+
+// 2. تحديث واجهة المستخدم (UI) لإضافة قسم التوعية
+{/* أضف هذا الجزء قبل الـ Footer مباشرة */}
+<section className="max-w-7xl mx-auto py-20 px-6 border-t border-white/5">
+  <h2 className="text-3xl font-black mb-12 text-center text-white">مركز <span className="text-cyan-500">التوعية الرقمية</span></h2>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {/* أداة توليد كلمات السر */}
+    <div className="bg-cyan-500/5 border border-cyan-500/20 p-8 rounded-[2.5rem]">
+      <h3 className="text-xl font-bold mb-4 text-cyan-400">🛡️ مولد كلمات السر الآمنة</h3>
+      <p className="text-sm text-slate-400 mb-6">استخدم كلمات سر معقدة لحماية حساباتك من هجمات التخمين.</p>
+      <div className="bg-black/40 p-4 rounded-xl mb-4 font-mono text-center text-cyan-500 break-all border border-white/5 min-h-[50px]">
+        {generatedPass || "اضغط لتوليد كلمة سر"}
+      </div>
+      <button 
+        onClick={generatePassword}
+        className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-full transition-all"
+      >
+        توليد كلمة سر 16 خانة
+      </button>
     </div>
+
+    {/* نصيحة اليوم التوعوية */}
+    <div className="bg-red-500/5 border border-red-500/20 p-8 rounded-[2.5rem]">
+      <h3 className="text-xl font-bold mb-4 text-red-400">⚠️ نصيحة أمنية عاجلة</h3>
+      <ul className="text-slate-400 text-sm space-y-4">
+        <li>• لا تفتح الروابط المختصرة من مصادر مجهولة.</li>
+        <li>• فعل خاصية "التحقق بخطوتين" (2FA) في كل حساباتك.</li>
+        <li>• سيبرها تنصحك دائماً بتحديث نظام تشغيل هاتفك فور صدور التحديث.</li>
+      </ul>
+      <button className="mt-6 text-xs text-red-500 font-bold hover:underline">تحميل دليل الحماية الكامل (قريباً) ←</button>
+    </div>
+  </div>
+</section>
   );
 }
