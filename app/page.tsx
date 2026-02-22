@@ -41,69 +41,104 @@ export default function CyberhaUltimatePro() {
   }, [searchTerm, news]);
 
   const Modal = ({ title, content }: { title: string, content: string }) => (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] p-6 flex items-center justify-center">
-      <div className="bg-[#0a0a0a] border border-white/10 max-w-2xl w-full max-h-[80vh] overflow-y-auto p-10 rounded-3xl relative shadow-2xl">
-        <button onClick={() => setActiveModal(null)} className="absolute top-6 left-6 text-cyan-500 font-bold">إغلاق ×</button>
+    <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[100] p-6 flex items-center justify-center">
+      <div className="bg-[#0a0a0a] border border-cyan-500/20 max-w-2xl w-full max-h-[80vh] overflow-y-auto p-10 rounded-3xl relative shadow-2xl">
+        <button onClick={() => setActiveModal(null)} className="absolute top-6 left-6 text-cyan-500 font-bold hover:text-white transition-colors">إغلاق ×</button>
         <h2 className="text-3xl font-black mb-6 text-white border-b border-cyan-500/20 pb-4">{title}</h2>
         <div className="text-slate-300 leading-loose text-sm whitespace-pre-wrap">{content}</div>
       </div>
     </div>
   );
 
-  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-cyan-500 animate-pulse font-mono">[جاري بناء المنصة السيبرانية...]</div>;
+  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-cyan-500 animate-pulse font-mono">[جاري استدعاء الأنظمة الأمنية...]</div>;
 
   return (
     <div className="min-h-screen bg-[#020202] text-slate-200" dir="rtl">
-      {activeModal === 'privacy' && <Modal title="سياسة الخصوصية" content="في سيبرها، نلتزم بحماية خصوصيتك. نحن لا نجمع بيانات شخصية عن الزوار. الأخبار المعروضة هي خلاصات عامة من وكالات عالمية. نستخدم ملفات تعريف الارتباط لتحسين تجربة المستخدم فقط." />}
-      {activeModal === 'about' && <Modal title="من نحن" content="سيبرها هي منصة رائدة لرصد الأخبار والتهديدات السيبرانية عالمياً. هدفنا هو تزويد المحترفين والمهتمين بالأمن الرقمي بأحدث المعلومات من 5 مصادر عالمية كبرى في مكان واحد." />}
-      {activeModal === 'contact' && <Modal title="اتصل بنا" content="للتواصل معنا بخصوص الاستفسارات البرمجية أو الإعلانات: support@cyberha.live" />}
+      
+      {/* 🔴 شريط التنبيهات الأحمر (نظام إنذار الثغرات) */}
+      <div className="bg-red-600/10 border-b border-red-600/30 py-2.5 overflow-hidden relative z-[60]">
+        <div className="flex animate-marquee whitespace-nowrap">
+          <span className="text-red-500 font-bold text-xs uppercase px-4 flex items-center gap-2">
+            <span className="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+             عاجل: اكتشاف ثغرة Zero-day في أنظمة التشفير واسعة النطاق ... مجموعات الفدية تستهدف قطاع الطاقة ... سيبرها تتبع نشاطاً مشبوهاً في بروتوكولات الويب الآن ...
+          </span>
+          {/* نكرر النص لضمان استمرارية الحركة */}
+          <span className="text-red-500 font-bold text-xs uppercase px-4 flex items-center gap-2">
+            <span className="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+             عاجل: اكتشاف ثغرة Zero-day في أنظمة التشفير واسعة النطاق ... مجموعات الفدية تستهدف قطاع الطاقة ... سيبرها تتبع نشاطاً مشبوهاً في بروتوكولات الويب الآن ...
+          </span>
+        </div>
+      </div>
 
-      <nav className="border-b border-white/5 p-6 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
+      {activeModal === 'privacy' && <Modal title="سياسة الخصوصية" content="في سيبرها، نلتزم بحماية خصوصيتك تماماً. نحن لا نجمع أي بيانات شخصية عن الزوار ولا نستخدم ملفات تتبع. نحن منصة محايدة لعرض الأخبار العالمية." />}
+      {activeModal === 'about' && <Modal title="من نحن" content="سيبرها هي بوابتك الأولى في الشرق الأوسط لرصد التهديدات السيبرانية العالمية. نجمع لك الأخبار من 5 وكالات عالمية كبرى لنضعك في قلب الحدث." />}
+      {activeModal === 'contact' && <Modal title="اتصل بنا" content="للتعاون أو الاستفسارات البرمجية، تواصل معنا عبر: admin@cyberha.live" />}
+
+      <nav className="border-b border-white/5 p-6 bg-black/60 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <h1 className="text-3xl font-black text-white cursor-pointer" onClick={() => setSelectedPost(null)}>سيبرها<span className="text-cyan-500">.LIVE</span></h1>
-          <input 
-            type="text" 
-            placeholder="ابحث عن ثغرة..." 
-            className="bg-white/5 border border-white/10 rounded-full py-2 px-6 w-full md:w-80 focus:border-cyan-500 outline-none"
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div className="relative w-full md:w-80">
+            <input 
+              type="text" 
+              placeholder="ابحث في الرادار العالمي..." 
+              className="bg-white/5 border border-white/10 rounded-xl py-2 px-6 w-full focus:border-cyan-500 outline-none transition-all text-sm"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto py-12 px-6">
         {!selectedPost ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredNews.map((item, i) => (
-              <article key={i} onClick={() => setSelectedPost(item)} className="bg-[#080808] border border-white/5 rounded-2xl overflow-hidden hover:border-cyan-500/40 transition-all cursor-pointer">
-                <img src={item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"} className="h-44 w-full object-cover" />
+              <article key={i} onClick={() => setSelectedPost(item)} className="bg-[#080808] border border-white/5 rounded-3xl overflow-hidden hover:border-cyan-500/40 transition-all cursor-pointer group shadow-2xl">
+                <div className="relative h-44 overflow-hidden">
+                   <div className="absolute top-3 right-3 bg-black/70 px-2 py-1 rounded text-[9px] text-cyan-500 border border-cyan-500/20 z-10">{item.author || 'Global Feed'}</div>
+                   <img src={item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"} className="h-full w-full object-cover group-hover:scale-105 transition duration-500" />
+                </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-bold group-hover:text-cyan-400">{item.title}</h3>
+                  <h3 className="text-lg font-bold group-hover:text-cyan-400 transition-colors leading-tight">{item.title}</h3>
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <div className="max-w-4xl mx-auto animate-in fade-in duration-700 text-right">
-            <button onClick={() => setSelectedPost(null)} className="mb-8 text-cyan-500">← العودة للرئيسية</button>
-            <h1 className="text-4xl font-black mb-10 leading-tight">{selectedPost.title}</h1>
+          <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-700">
+            <button onClick={() => setSelectedPost(null)} className="mb-8 text-cyan-500 font-bold">← العودة للرادار</button>
+            <img src={selectedPost.thumbnail} className="w-full rounded-[2.5rem] mb-10 border border-white/10 shadow-2xl" />
+            <h1 className="text-4xl md:text-5xl font-black mb-8 leading-tight">{selectedPost.title}</h1>
             <div className="prose prose-invert max-w-none text-slate-300 text-xl leading-relaxed">
               <div dangerouslySetInnerHTML={{ __html: selectedPost.content || selectedPost.description }} />
+            </div>
+            <div className="mt-12 pt-8 border-t border-white/5 text-center">
+               <a href={selectedPost.link} target="_blank" className="bg-white text-black px-12 py-4 rounded-full font-black hover:bg-cyan-500 hover:text-white transition-all inline-block">تصفح التقرير في المصدر</a>
             </div>
           </div>
         )}
       </main>
 
-      {/* Footer مع الصفحات القانونية المطلوبة لجوجل */}
       <footer className="py-20 border-t border-white/5 bg-black">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
-          <div className="flex gap-8 mb-8 text-xs font-bold text-slate-500">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex justify-center gap-8 mb-8 text-xs font-bold text-slate-500">
             <button onClick={() => setActiveModal('about')} className="hover:text-cyan-500">من نحن</button>
             <button onClick={() => setActiveModal('privacy')} className="hover:text-cyan-500">سياسة الخصوصية</button>
             <button onClick={() => setActiveModal('contact')} className="hover:text-cyan-500">اتصل بنا</button>
           </div>
-          <p className="text-[10px] text-slate-700 tracking-[0.5em]">CYBERHA GLOBAL HUB &copy; 2026</p>
+          <p className="text-[10px] text-slate-700 tracking-[0.4em] uppercase">Cyberha Hub &copy; 2026 - Powered by Intelligence</p>
         </div>
       </footer>
+
+      {/* 🟢 أكواد الأنيميشن المطلوبة للشريط الأحمر */}
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+          animation: marquee 25s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
