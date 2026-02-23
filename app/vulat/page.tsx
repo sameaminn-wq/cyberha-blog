@@ -4,19 +4,21 @@ import { useEffect, useState } from "react";
 export default function CyberhaVault() {
   const [vulnerabilities, setVulnerabilities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function fetchVulnerabilities() {
       try {
         setLoading(true);
-        // استخدام API الخاص بـ CISA لجلب الثغرات المكتشفة حديثاً
-        const response = await fetch("https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json");
-        const data = await response.json();
-        // أخذ آخر 20 ثغرة تم تحديثها
-        const latestSpecs = data.vulnerabilities.slice(0, 20);
-        setVulnerabilities(latestSpecs);
+        // استخدام بروكسي لتجنب حجب البيانات
+        const res = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"));
+        const proxyData = await res.json();
+        const data = JSON.parse(proxyData.contents);
+        
+        setVulnerabilities(data.vulnerabilities.slice(0, 20));
       } catch (err) {
-        console.error("Failed to fetch vulnerabilities");
+        console.error("Critical Connection Failure");
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -24,27 +26,31 @@ export default function CyberhaVault() {
     fetchVulnerabilities();
   }, []);
 
+  if (error) return <div className="text-red-500 p-20 text-center font-mono uppercase">Offline_Mode: Failed to bridge CISA Data</div>;
+
   return (
     <div className="min-h-screen bg-[#050810] text-[#e0e0e0] font-mono p-8" dir="ltr">
-      {/* Header */}
       <div className="max-w-7xl mx-auto mb-12 flex justify-between items-end border-b border-[#64ffda]/20 pb-8">
         <div>
           <h1 className="text-4xl font-black text-white italic tracking-tighter">THE_VAULT</h1>
           <p className="text-[#64ffda] text-[10px] tracking-[0.5em] uppercase mt-2">Exploit Database & Patch Registry</p>
         </div>
-        <div className="text-right">
+        <div className="text-right flex flex-col items-end">
           <span className="text-red-500 text-[10px] font-black animate-pulse uppercase">● Live_Feed_Active</span>
+          <span className="text-[8px] text-slate-500 mt-1">SEC_NODE: 2026_ALPHA</span>
         </div>
       </div>
 
-      {/* Vulnerability Table */}
       <div className="max-w-7xl mx-auto">
         {loading ? (
-          <div className="text-center py-20 animate-pulse text-slate-500 uppercase tracking-widest text-xs">Accessing Encrypted Records...</div>
+          <div className="text-center py-20">
+             <div className="w-10 h-10 border-2 border-[#64ffda] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+             <p className="animate-pulse text-slate-500 uppercase tracking-widest text-xs">Accessing Encrypted Records...</p>
+          </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-4 animate-in fade-in duration-1000">
             {vulnerabilities.map((v, i) => (
-              <div key={i} className="bg-[#0d1117] border border-white/5 p-6 rounded-2xl hover:border-[#64ffda]/40 transition-all group">
+              <div key={i} className="bg-[#0d1117] border border-white/5 p-6 rounded-2xl hover:border-[#64ffda]/40 transition-all group shadow-xl">
                 <div className="flex flex-col md:flex-row justify-between gap-4">
                   <div className="flex-grow">
                     <div className="flex items-center gap-3 mb-2">
@@ -52,7 +58,7 @@ export default function CyberhaVault() {
                         {v.cveID}
                       </span>
                       <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">
-                        Updated: {v.dateAdded}
+                        {v.dateAdded}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-white group-hover:text-[#64ffda] transition-colors mb-2 italic">
@@ -69,23 +75,15 @@ export default function CyberhaVault() {
                       target="_blank" 
                       className="bg-white/5 hover:bg-[#64ffda] hover:text-black text-white text-[9px] font-black px-4 py-2 rounded-lg transition-all uppercase tracking-widest border border-white/10"
                     >
-                      View_Patch
+                      View_Details
                     </a>
                   </div>
-                </div>
-                {/* Status Bar */}
-                <div className="mt-4 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                   <div className="h-full bg-red-600 w-[75%] opacity-50"></div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
-      
-      <footer className="mt-20 text-center py-10 border-t border-white/5">
-         <button onClick={() => window.history.back()} className="text-[#64ffda] text-[10px] font-black uppercase tracking-[0.4em] hover:tracking-[0.6em] transition-all italic">← Return_to_Main_Terminal</button>
-      </footer>
     </div>
   );
 }
