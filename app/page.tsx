@@ -56,7 +56,7 @@ export default function CyberhaArabicSystem() {
       
       {/* 🔴 شريط الأنباء العلوي العريض (خط 16 ولون أحمر) */}
       <div className="bg-red-600 py-3 overflow-hidden sticky top-0 z-[100] shadow-[0_4px_30px_rgba(220,38,38,0.4)]">
-        <div className="flex animate-marquee whitespace-nowrap text-[16px] font-black text-white tracking-widest uppercase italic">
+        <div className="flex animate-marquee whitespace-nowrap text-[13px] font-black text-white tracking-widest uppercase italic">
           {news.slice(0, 6).map((item, i) => (
             <span key={i} className="px-12 flex items-center gap-4">
               <span className="w-2 h-2 bg-white rounded-full animate-ping"></span>
@@ -88,25 +88,56 @@ export default function CyberhaArabicSystem() {
             {/* الأدوات التكتيكية (Arsenal) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative group">
-                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// مولد التشفير العشوائي</h3>
+                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// اشكال كلمات السر القوية</h3>
                   <div className="bg-black p-5 rounded-2xl text-center text-xl font-mono text-red-500 border border-white/5 mb-6 break-all min-h-[70px] flex items-center justify-center">
                     {generatedPass || "••••••••••••••••"}
                   </div>
                   <button onClick={genPass} className="w-full py-4 bg-red-600 text-white text-[12px] font-black uppercase hover:bg-white hover:text-black transition-all rounded-2xl">توليد مفتاح تشفير</button>
                </div>
                
-               <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl">
-                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// رادار بيتا ديفندر للتهديدات</h3>
-                  <div className="space-y-4">
-                    <p className="text-sm text-slate-400 italic leading-relaxed">
-                      "تشير التحليلات الحيوية الحالية إلى ارتفاع كبير في هجمات التصيد الاحتيالي الموجهة نحو المؤسسات المالية. حالة الرصد: نشط."
-                    </p>
-                    <div className="flex items-center gap-3">
-                       <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse"></span>
-                       <span className="text-[11px] font-black text-red-600 uppercase">مستوى الخطر: مرتفع جداً</span>
-                    </div>
-                  </div>
-               </div>
+               <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative group overflow-hidden">
+  {/* العنوان */}
+  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">
+    // رادار فحص الروابط المشبوهة
+  </h3>
+  
+  <div className="space-y-6">
+    {/* حقل الإدخال */}
+    <div className="relative">
+      <input 
+        type="text" 
+        id="urlScanner"
+        placeholder="أدخل رابط الموقع للفحص (http://...)" 
+        className="w-full bg-black border border-white/10 p-4 rounded-2xl text-xs text-white placeholder:text-slate-600 focus:border-red-600 outline-none transition-all italic"
+      />
+    </div>
+
+    {/* زر الفحص */}
+    <button 
+      onClick={() => {
+        const url = (document.getElementById('urlScanner') as HTMLInputElement).value;
+        if(url) {
+          // فتح الفحص في VirusTotal بشكل مباشر واحترافي
+          window.open(`https://www.virustotal.com/gui/search/${encodeURIComponent(url)}`, '_blank');
+        } else {
+          alert("يرجى إدخال رابط أولاً");
+        }
+      }}
+      className="w-full py-4 bg-red-600/10 border border-red-600/40 text-red-600 text-[11px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all rounded-2xl flex items-center justify-center gap-3"
+    >
+      <span className="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+      بدء تحليل التهديدات الرقمية
+    </button>
+
+    {/* حالة الرصد المحدثة */}
+    <div className="flex items-center gap-3 border-t border-white/5 pt-4">
+       <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse"></span>
+       <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">
+         حالة الرادار: جاهز لتحليل الروابط الصادرة
+       </span>
+    </div>
+  </div>
+</div>
             </div>
 
             {/* شبكة الأخبار */}
