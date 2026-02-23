@@ -24,7 +24,7 @@ export default function CyberhaTheLegacy() {
           fetch(`https://api.rss2json.com/v1/api.json?rss_url=${url}`).then(res => res.json())
         ));
         let combined = responses.flatMap(data => (data.items || []).map((item: any) => ({
-          ...item, source: data.feed.title?.split(' - ')[0] || "استخبارات عالمية",
+          ...item, source: data.feed.title?.split(' - ')[0] || "معلومات عالمية",
           img: item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"
         })));
         setNews(combined.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()));
@@ -59,7 +59,7 @@ export default function CyberhaTheLegacy() {
           {news.slice(0, 10).map((item, i) => (
             <span key={i} className="px-12 flex items-center gap-4">
               <span className="w-2 h-2 bg-white rounded-full animate-ping"></span>
-              تنبيه استخباراتي عاجل :: {item.source} :: {item.title}
+              تنبيه  عاجل :: {item.source} :: {item.title}
             </span>
           ))}
         </div>
@@ -69,9 +69,9 @@ export default function CyberhaTheLegacy() {
       <nav className="p-8 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 border-b border-white/5">
         <div className="cursor-pointer group" onClick={() => {setView("hub"); setSelectedPost(null);}}>
           <h1 className="text-4xl font-black tracking-tighter text-white group-hover:text-red-500 transition-all">
-            سيبرها<span className="text-red-600">.الاستخبارات</span>
+            سيبرها<span className="text-red-600">.LIVE</span>
           </h1>
-          <p className="text-[10px] text-slate-500 tracking-[0.5em] uppercase italic">محطة المراقبة السيادية</p>
+          <p className="text-[10px] text-slate-500 tracking-[0.5em] uppercase italic">محطة المعلومات العالمية</p>
         </div>
 
         <div className="flex items-center gap-10 text-[14px] font-black uppercase tracking-widest">
@@ -87,7 +87,7 @@ export default function CyberhaTheLegacy() {
             {/* 🛠️ الأدوات التكتيكية */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative group overflow-hidden">
-                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// مولد التشفير العشوائي</h3>
+                  <h3 className="text-red-600 font-black text-[15px] uppercase mb-6 tracking-widest italic">مؤلد كلمات السر القوية </h3>
                   <div className="bg-black/50 p-5 rounded-2xl text-center text-xl font-mono text-red-500 border border-white/5 mb-6 break-all min-h-[70px] flex items-center justify-center">
                     {generatedPass || "••••••••••••••••"}
                   </div>
@@ -95,7 +95,7 @@ export default function CyberhaTheLegacy() {
                </div>
                
                <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative group overflow-hidden">
-                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// رادار فحص الروابط المشبوهة</h3>
+                  <h3 className="text-red-600 font-black text-[15px] uppercase mb-6 tracking-widest italic"> رادار فحص الروابط المشبوهة</h3>
                   <div className="space-y-6">
                     <input type="text" id="urlScanner" placeholder="أدخل رابط الموقع للفحص (http://...)" className="w-full bg-black border border-white/10 p-4 rounded-2xl text-xs text-white placeholder:text-slate-600 focus:border-red-600 outline-none transition-all italic" />
                     <button onClick={() => {
@@ -128,7 +128,7 @@ export default function CyberhaTheLegacy() {
 
         {view === "vault" && (
           <div className="animate-in fade-in duration-1000">
-             <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-12 border-r-4 border-red-600 pr-6">سجل التهديدات المستغلة (CISA)</h2>
+             <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-12 border-r-4 border-red-600 pr-6">سجل التهديدات والثغرات </h2>
              <div className="grid gap-6">
                 {vault.map((v, i) => (
                   <div key={i} className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2.5rem] hover:border-red-600/40 transition-all group flex flex-col md:flex-row justify-between items-center gap-6">
@@ -175,9 +175,25 @@ export default function CyberhaTheLegacy() {
                 {activeModal === 'contact' && "الاتصال الآمن"}
               </h2>
               <div className="text-slate-300 text-md leading-relaxed italic">
-                {activeModal === 'privacy' && <p>نحن لا نجمع أي بيانات. سيبرها هي منصة عرض ذكية تعمل محلياً تماماً.</p>}
-                {activeModal === 'terms' && <p>استخدام المعلومات مخصص للدفاع الرقمي والتوعية فقط.</p>}
-                {activeModal === 'about' && <p>سيبرها هي المحطة الأولى في الشرق الأوسط لمراقبة التهديدات السيبرانية.</p>}
+                {activeModal === 'privacy' && (
+                  <>
+                    <p className="text-[#38bdf8] font-black underline underline-offset-4 mb-4 uppercase text-sm">سياسة الخصوصية الصارمة:</p>
+                    <p>1. **بروتوكول انعدام الأثر:** لا يقوم نظام سيبرها بتخزين أي عناوين IP أو سجلات تصفح. بياناتك تبدأ وتنتهي في متصفحك.</p>
+                    <p>2. **التشفير المحلي:** جميع الأدوات التكتيكية (مولدات المفاتيح) تعمل بواسطة محرك JavaScript المحلي ولا يتم إرسال النتائج إلى أي خادم خارجي.</p>
+                    <p>3. **الحماية من الطرف الثالث:** نحن لا نستخدم أدوات تتبع من طرف ثالث (مثل Google Analytics)؛ خصوصيتك هي أولويتنا القصوى وغير قابلة للتفاوض.</p>
+                  </>
+                )}
+                {activeModal === 'terms' && (
+                  <>
+                    <p className="text-[#38bdf8] font-black underline underline-offset-4 mb-4 uppercase text-sm">شروط الاستخدام القوية:</p>
+                    <p>1. **الاستخدام الدفاعي فقط:** تمنح سيبرها حق الوصول لغرض التوعية والدفاع السيبراني. يُحظر استخدام التقارير أو الأدوات في أي نشاط هجومي ضد أي بنية تحتية رقمية.</p>
+                    <p>2. **إخلاء المسؤولية الصارم:** سيبرها ليست مسؤولة عن أي أضرار ناتجة عن سوء فهم المعلومات أو التطبيق الخاطئ للأدوات. أنت وحدك المسؤول عن أفعالك الرقمية.</p>
+                    <p>3. **الملكية الفكرية:** جميع تصاميم الواجهات والرموز البرمجية الخاصة بسيبرها محمية ولا يجوز إعادة إنتاجها لأغراض تجارية دون إذن كتابي مشفر.</p>
+                  </>
+                )}
+                {activeModal === 'about' && (
+                  <p>سيبرها هي المحطة الرائدة لاستخبارات التهديدات الرقمية في عام 2026. تم تصميمها لتكون حلقة الوصل بين تدفقات البيانات المعقدة من كبار وكالات الأمن وبين المستخدم التقني المحترف.</p>
+                )}
                 {activeModal === 'contact' && (
                   <div className="text-center bg-white/5 p-6 rounded-2xl">
                     <p className="mb-4 text-sm">البريد الإلكتروني المشفر:</p>
