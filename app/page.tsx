@@ -212,7 +212,7 @@ export default function CyberhaSystem() {
       }} 
       className="bg-white text-black py-3 rounded-xl text-[10px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-xl"
     >
-      موافق، إغلاق التنبيه
+      موافق 
     </button>
   </div>
 )}
