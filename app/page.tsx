@@ -1,179 +1,179 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function CyberhaGlobalIntel() {
+export default function CyberhaUltimateSystem() {
   const [news, setNews] = useState<any[]>([]);
+  const [vault, setVault] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<any>(null);
-  const [generatedPass, setGeneratedPass] = useState("");
-  const [dailyTip, setDailyTip] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [view, setView] = useState<"hub" | "vault">("hub");
 
-  // Daily Cyber-Awareness Tips (Cycle through 365 days)
-  const tips = [
-    "Never reuse passwords across different platforms. Use a dedicated password manager.",
-    "Beware of 'Juice Jacking' – avoid using public USB charging stations in airports.",
-    "Enable Two-Factor Authentication (2FA) on all sensitive accounts immediately.",
-    "Check URLs for HTTPS and spelling errors before entering any private credentials.",
-    "Always update your router's firmware to patch critical security vulnerabilities.",
-    "Avoid clicking on shortened links from unknown sources in SMS or emails.",
-    "Physical security matters: cover your webcam when it is not in use.",
-    "Regularly back up your data to an offline encrypted drive to prevent Ransomware loss.",
-    "Be skeptical of urgent emails claiming your account will be deleted.",
-    "Public Wi-Fi is insecure – always use a trusted VPN for encryption.",
-    "Review app permissions: delete apps that ask for unnecessary location or mic access.",
-    "A sudden drop in battery life might indicate background crypto-mining or spyware."
+  // 📡 مصادر الاستخبارات والثغرات
+  const FEEDS = [
+    "https://thehackernews.com/rss",
+    "https://www.bleepingcomputer.com/feed/",
+    "https://www.darkreading.com/rss.xml"
   ];
 
   useEffect(() => {
-    // Dynamic Tip Selection based on the day of the year
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now.getTime() - start.getTime();
-    const oneDay = 1000 * 60 * 60 * 24;
-    const day = Math.floor(diff / oneDay);
-    setDailyTip(tips[day % tips.length]);
-
-    async function fetchIntel() {
+    async function initSystem() {
       try {
-        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/`);
-        const data = await res.json();
-        setNews(data.items.slice(0, 12));
-      } catch (e) {
-        console.error("Link to Intelligence Feed Severed.");
-      } finally {
-        setLoading(false);
-      }
+        setLoading(true);
+        // جلب الأخبار
+        const newsRes = await Promise.all(FEEDS.map(url => 
+          fetch(`https://api.rss2json.com/v1/api.json?rss_url=${url}`).then(res => res.json())
+        ));
+        let combinedNews = newsRes.flatMap(data => (data.items || []).map((item: any) => ({
+          ...item, source: data.feed.title?.split(' - ')[0] || "Global Intel", 
+          img: item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"
+        })));
+        setNews(combinedNews.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()));
+
+        // جلب بيانات المخزن (CISA Known Vulnerabilities)
+        const vaultRes = await fetch("https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json");
+        const vaultData = await vaultRes.json();
+        setVault(vaultData.vulnerabilities.slice(0, 15));
+      } catch (err) { console.error("Link Failure"); }
+      finally { setLoading(false); }
     }
-    fetchIntel();
+    initSystem();
   }, []);
 
-  const genPass = () => {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    setGeneratedPass(Array.from({length: 18}, () => chars[Math.floor(Math.random()*chars.length)]).join(''));
-  };
-
   if (loading) return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center font-mono text-cyan-500">
-      <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-      <p className="animate-pulse tracking-widest text-xs uppercase">Establishing Secure Feed...</p>
+    <div className="min-h-screen bg-[#020617] flex items-center justify-center font-mono text-[#38bdf8]">
+      <div className="text-center tracking-[0.8em] animate-pulse uppercase italic">Initializing_Cyberha_Secure_Link...</div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#020202] text-slate-200 font-sans selection:bg-cyan-500 selection:text-black" dir="ltr">
+    <div className="min-h-screen bg-[#020617] text-[#f8fafc] font-sans selection:bg-[#38bdf8] selection:text-[#020617]" dir="ltr">
       
-      {/* 🔴 LIVE NEWS TICKER */}
-      <div className="bg-red-600/10 border-b border-red-600/30 py-2.5 overflow-hidden sticky top-0 z-[70] backdrop-blur-md">
-        <div className="flex animate-marquee whitespace-nowrap text-[10px] font-bold text-red-500 uppercase tracking-tighter">
-          {news.map((item, i) => (
-            <span key={i} className="px-10 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></span>
-              URGENT: {item.title}
+      {/* 🔴 شريط الأنباء الصارم */}
+      <div className="bg-[#38bdf8]/10 border-b border-[#38bdf8]/20 py-2 overflow-hidden sticky top-0 z-[100] backdrop-blur-xl">
+        <div className="flex animate-marquee whitespace-nowrap text-[9px] font-black text-[#38bdf8] tracking-widest uppercase italic">
+          {news.slice(0, 8).map((item, i) => (
+            <span key={i} className="px-12 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-[#38bdf8] rounded-full animate-ping"></span>
+              ALERT_LEVEL_1 :: {item.source} :: {item.title}
             </span>
           ))}
         </div>
       </div>
 
-      <nav className="p-8 border-b border-white/5 flex justify-between items-center max-w-7xl mx-auto">
-        <div>
-          <h1 className="text-3xl font-black tracking-tighter cursor-pointer" onClick={() => setSelectedPost(null)}>
-            CYBERHA<span className="text-cyan-500">.INTEL</span>
+      <nav className="p-8 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-white/5">
+        <div className="cursor-pointer" onClick={() => {setView("hub"); setSelectedPost(null);}}>
+          <h1 className="text-4xl font-black tracking-tighter text-white">
+            CYBERHA<span className="text-[#38bdf8]">.INTEL</span>
           </h1>
-          <p className="text-[7px] font-mono text-cyan-900 tracking-[0.5em] uppercase">Global Threat Monitoring Active</p>
+          <p className="text-[8px] text-slate-500 tracking-[0.7em] uppercase italic">Premium Cyber Intelligence Terminal</p>
         </div>
-        <div className="hidden md:flex flex-col items-end font-mono text-[9px] text-slate-600 uppercase">
-           <span>Protocol: TLS 1.3</span>
-           <span className="text-green-600">Status: Encrypted</span>
+        <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest italic text-slate-400">
+           <button onClick={() => setView("hub")} className={view === 'hub' ? 'text-[#38bdf8] border-b border-[#38bdf8]' : 'hover:text-white'}>Hub</button>
+           <button onClick={() => setView("vault")} className={view === 'vault' ? 'text-[#38bdf8] border-b border-[#38bdf8]' : 'hover:text-white'}>The_Vault</button>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-16 px-6">
-        {!selectedPost ? (
-          <>
-            {/* 🗺️ LIVE THREAT RADAR */}
-            <section className="mb-24">
-              <div className="bg-gradient-to-br from-cyan-950/20 via-black to-black border border-cyan-500/20 p-16 rounded-[3rem] text-center shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                <h2 className="text-5xl font-black mb-6 tracking-tighter text-white uppercase italic">Live Threat Map</h2>
-                <p className="text-slate-400 mb-10 max-w-2xl mx-auto text-sm leading-relaxed">
-                  Real-time visualization of global cyberattacks. Due to high-security encryption, the radar is best viewed in a dedicated operational window.
-                </p>
-                <a href="https://cybermap.kaspersky.com/" target="_blank" className="bg-cyan-600 hover:bg-white hover:text-black text-white px-12 py-5 rounded-full font-black transition-all inline-block shadow-2xl shadow-cyan-900/40 uppercase text-xs tracking-widest">
-                  Launch Tactical Radar ←
-                </a>
-              </div>
-            </section>
-
-            {/* 🛡️ INTERACTIVE TOOLS & AWARENESS */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
-              {/* Password Tool */}
-              <div className="bg-[#080808] border border-white/5 p-12 rounded-[3.5rem] hover:border-cyan-500/30 transition-all shadow-xl">
-                <h3 className="text-2xl font-bold mb-6 text-white uppercase tracking-tight">🛡️ Shield Gen</h3>
-                <div className="bg-black p-5 rounded-2xl mb-8 font-mono text-cyan-500 text-center border border-white/5 tracking-widest text-lg h-16 flex items-center justify-center break-all">
-                  {generatedPass || "••••••••••••••••"}
+      <main className="max-w-7xl mx-auto py-12 px-6">
+        {view === "hub" && !selectedPost && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {news.slice(0, 15).map((item, i) => (
+              <article key={i} onClick={() => setSelectedPost(item)} className="group bg-[#0f172a] border border-white/5 rounded-[2rem] overflow-hidden hover:border-[#38bdf8]/30 transition-all cursor-pointer shadow-2xl">
+                <img src={item.img} className="h-48 w-full object-cover opacity-40 group-hover:opacity-100 transition-all duration-700" alt="Intel" />
+                <div className="p-8">
+                  <div className="text-[8px] font-black text-[#38bdf8] mb-4 tracking-widest uppercase">{item.source}</div>
+                  <h3 className="text-lg font-bold text-white group-hover:text-[#38bdf8] leading-tight transition-colors italic line-clamp-2">{item.title}</h3>
                 </div>
-                <button onClick={genPass} className="w-full bg-cyan-600 text-white py-5 rounded-3xl font-black hover:bg-cyan-500 transition-all shadow-lg uppercase text-[10px] tracking-widest">
-                  Generate Secure Key
-                </button>
-              </div>
+              </article>
+            ))}
+          </div>
+        )}
 
-              {/* Daily Awareness */}
-              <div className="bg-red-600/5 border border-red-600/10 p-12 rounded-[3.5rem] flex flex-col justify-center relative group overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 text-red-600/20 text-6xl font-black italic">!</div>
-                <h3 className="text-2xl font-bold mb-6 text-red-500 uppercase tracking-tight italic">💡 Daily Tip</h3>
-                <p className="text-xl text-slate-200 font-light leading-relaxed italic animate-in fade-in duration-1000">
-                  "{dailyTip}"
-                </p>
-                <div className="mt-8 text-[8px] font-mono text-slate-700 uppercase tracking-widest">Next Pulse: 24h Remaining</div>
-              </div>
-            </section>
-
-            {/* INTELLIGENCE FEED */}
-            <h2 className="text-3xl font-black mb-12 tracking-tighter uppercase italic text-white/90 border-l-4 border-cyan-500 pl-6">Intelligence Reports</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {news.map((item, i) => (
-                <article key={i} onClick={() => setSelectedPost(item)} className="bg-[#080808] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-cyan-500/40 transition-all cursor-pointer group shadow-2xl flex flex-col">
-                  <div className="h-48 relative overflow-hidden">
-                    <img src={item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000" />
+        {view === "vault" && (
+          <div className="animate-in fade-in duration-700">
+            <h2 className="text-3xl font-black text-white mb-10 italic border-l-4 border-[#38bdf8] pl-6 uppercase">Exploit_Registry</h2>
+            <div className="grid gap-4">
+              {vault.map((v, i) => (
+                <div key={i} className="bg-[#0f172a] border border-white/5 p-6 rounded-2xl flex justify-between items-center hover:bg-[#1e293b] transition-all group">
+                  <div>
+                    <span className="text-[#38bdf8] font-mono text-[10px] block mb-2">{v.cveID}</span>
+                    <h4 className="text-white font-bold italic group-hover:tracking-wider transition-all">{v.vulnerabilityName}</h4>
                   </div>
-                  <div className="p-8">
-                    <h3 className="font-bold text-lg leading-tight group-hover:text-cyan-400 transition-colors mb-4">{item.title}</h3>
-                    <p className="text-slate-600 text-[10px] uppercase font-mono tracking-widest group-hover:text-slate-400 transition-colors">Decrypt Full Intel +</p>
-                  </div>
-                </article>
+                  <a href={`https://nvd.nist.gov/vuln/detail/${v.cveID}`} target="_blank" className="text-[10px] font-black text-slate-500 hover:text-white uppercase tracking-widest">Patch_Details →</a>
+                </div>
               ))}
             </div>
-          </>
-        ) : (
-          <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-700">
-             <button onClick={() => setSelectedPost(null)} className="mb-12 text-cyan-500 font-bold hover:tracking-[0.3em] transition-all uppercase text-[10px] flex items-center gap-2">
-                <span className="text-lg">←</span> Back to Dashboard
-             </button>
-             <h1 className="text-4xl md:text-6xl font-black mb-12 leading-[1.05] tracking-tighter">{selectedPost.title}</h1>
-             <div className="prose prose-invert max-w-none text-slate-300 text-xl leading-relaxed bg-[#080808] p-12 rounded-[3rem] border border-white/5 shadow-2xl font-light">
-                <div dangerouslySetInnerHTML={{ __html: selectedPost.content || selectedPost.description }} />
-             </div>
-             <div className="mt-16 text-center">
-                <a href={selectedPost.link} target="_blank" className="bg-white text-black px-14 py-5 rounded-full font-black hover:bg-cyan-500 hover:text-white transition-all shadow-2xl inline-block uppercase text-[11px] tracking-[0.2em]">Explore Original Source</a>
-             </div>
+          </div>
+        )}
+
+        {selectedPost && view === "hub" && (
+          <div className="max-w-3xl mx-auto animate-in slide-in-from-bottom-8 duration-700">
+            <button onClick={() => setSelectedPost(null)} className="mb-10 text-[#38bdf8] text-[10px] font-black tracking-widest">← RETURN_TO_HUB</button>
+            <h1 className="text-5xl font-black text-white mb-10 italic leading-[0.9] uppercase tracking-tighter">{selectedPost.title}</h1>
+            <div className="prose prose-invert max-w-none text-slate-300 text-lg leading-relaxed bg-[#0f172a] p-10 rounded-[2.5rem] border border-white/5 italic shadow-2xl">
+              <div dangerouslySetInnerHTML={{ __html: selectedPost.content || selectedPost.description }} />
+            </div>
           </div>
         )}
       </main>
 
-      <footer className="py-24 border-t border-white/5 bg-black/50 mt-24 text-center">
-          <div className="flex justify-center gap-12 mb-10 text-[10px] font-black text-slate-600 uppercase tracking-widest">
-             <button className="hover:text-cyan-500 transition-colors">About Intel</button>
-             <button className="hover:text-cyan-500 transition-colors">Privacy Policy</button>
-             <button className="hover:text-cyan-500 transition-colors">Contact Terminal</button>
+      <footer className="py-20 border-t border-white/5 bg-black/40 mt-20 text-center">
+          <div className="flex justify-center flex-wrap gap-10 mb-10 text-[10px] font-black text-slate-500 uppercase tracking-widest italic">
+             <button onClick={() => setActiveModal('about')} className="hover:text-[#38bdf8]">The_Agency</button>
+             <button onClick={() => setActiveModal('privacy')} className="hover:text-[#38bdf8]">Privacy_Protocol</button>
+             <button onClick={() => setActiveModal('terms')} className="hover:text-[#38bdf8]">Terms_of_Use</button>
+             <button onClick={() => setActiveModal('contact')} className="hover:text-[#38bdf8]">Secure_Line</button>
           </div>
-          <p className="text-[9px] text-slate-800 tracking-[0.8em] mb-4 uppercase">Cyberha Intelligence Hub &copy; 2026</p>
-          <div className="text-[8px] font-mono text-slate-900 tracking-widest uppercase italic">Comms: sameaminn@proton.me</div>
+          <p className="text-[8px] text-slate-800 tracking-[1.2em] font-black uppercase">Cyberha Intel // Secure Node 2026</p>
       </footer>
+
+      {/* ⚖️ MODALS (السياسات الصارمة) */}
+      {activeModal && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[200] flex items-center justify-center p-6" onClick={() => setActiveModal(null)}>
+           <div className="bg-[#0f172a] border border-[#38bdf8]/20 max-w-2xl w-full p-12 rounded-[3rem] shadow-2xl relative overflow-y-auto max-h-[80vh]" onClick={e => e.stopPropagation()}>
+              <h2 className="text-2xl font-black text-[#38bdf8] uppercase italic mb-8">
+                {activeModal === 'privacy' && "Privacy_Zero_Protocol"}
+                {activeModal === 'terms' && "Terms_of_Engagement"}
+                {activeModal === 'about' && "The_Cyberha_Mission"}
+                {activeModal === 'contact' && "Encrypted_Comm_Link"}
+              </h2>
+              <div className="text-slate-400 text-xs leading-relaxed space-y-6 font-medium italic">
+                {activeModal === 'privacy' && (
+                  <>
+                    <p>1. **انعدام الأثر:** سيبرها تتبع سياسة "عدم السجلات" المطلقة. لا يتم تخزين ملفات تعريف الارتباط (Cookies) أو تتبع البصمة الرقمية للزوار.</p>
+                    <p>2. **تشفير الأطراف:** جميع العمليات التكتيكية (مثل توليد كلمات السر) تتم محلياً في متصفحك ولا تُرسل لخوادمنا نهائياً.</p>
+                    <p>3. **حماية البيانات:** نحن لا نبيع أو نشارك أي بيانات؛ ببساطة لأننا لا نجمعها في المقام الأول.</p>
+                  </>
+                )}
+                {activeModal === 'terms' && (
+                  <>
+                    <p>1. **الغرض الدفاعي:** منصة سيبرها مُخصصة للأغراض التعليمية والدفاعية فقط. يُحظر استخدام الأدوات المتاحة في أي نشاط هجومي.</p>
+                    <p>2. **المسؤولية القانونية:** المستخدم هو المسؤول الوحيد عن كيفية استخدامه للمعلومات المتاحة. "سيبرها" غير مسؤولة عن أي سوء استخدام.</p>
+                    <p>3. **حق الوصول:** نحتفظ بالحق في تقييد الوصول إلى الأجزاء المتقدمة من "المخزن" في حال رصد نشاط آلي مشبوه.</p>
+                  </>
+                )}
+                {activeModal === 'about' && (
+                  <p>سيبرها هي المحطة المركزية للاستخبارات التقنية في 2026. نهدف لتوفير وصول مباشر وسريع لأحدث التهديدات والثغرات العالمية لتمكين المتخصصين من حماية البنى التحتية الرقمية.</p>
+                )}
+                {activeModal === 'contact' && (
+                  <div className="text-center">
+                    <p className="mb-4">للتواصل عبر القنوات المشفرة:</p>
+                    <div className="bg-black/50 p-4 rounded-xl text-white font-mono select-all">sameaminn@proton.me</div>
+                  </div>
+                )}
+              </div>
+              <button onClick={() => setActiveModal(null)} className="mt-10 w-full py-4 bg-[#38bdf8] text-[#020617] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all">Close_Terminal</button>
+           </div>
+        </div>
+      )}
 
       <style jsx global>{`
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .animate-marquee { animation: marquee 40s linear infinite; }
-        .animate-marquee:hover { animation-play-state: paused; }
+        .animate-marquee { animation: marquee 50s linear infinite; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
       `}</style>
     </div>
   );
