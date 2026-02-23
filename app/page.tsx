@@ -24,7 +24,7 @@ export default function CyberhaArabicSystem() {
           fetch(`https://api.rss2json.com/v1/api.json?rss_url=${url}`).then(res => res.json())
         ));
         let combined = responses.flatMap(data => (data.items || []).map((item: any) => ({
-          ...item, source: data.feed.title?.split(' - ')[0] || "استخبارات عالمية",
+          ...item, source: data.feed.title?.split(' - ')[0] || "معلومات عالمية",
           img: item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b"
         })));
         setNews(combined.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()));
@@ -70,9 +70,9 @@ export default function CyberhaArabicSystem() {
       <nav className="p-8 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 border-b border-white/5">
         <div className="cursor-pointer group" onClick={() => {setView("hub"); setSelectedPost(null);}}>
           <h1 className="text-4xl font-black tracking-tighter text-white group-hover:text-red-500 transition-all">
-            سيبرها<span className="text-red-600">.Tec</span>
+            سيبرها<span className="text-red-600">.LIVE</span>
           </h1>
-          <p className="text-[10px] text-slate-500 tracking-[0.5em] uppercase italic">محطة الاستخبارات السيادية</p>
+          <p className="text-[10px] text-slate-500 tracking-[0.5em] uppercase italic">محطة المعلومات السريعة </p>
         </div>
 
         <div className="flex items-center gap-10 text-[14px] font-black uppercase tracking-widest">
