@@ -94,10 +94,10 @@ export default function CyberhaSystem() {
 
       <nav className="p-8 max-w-7xl mx-auto flex justify-between items-center border-b border-white/5">
         <div className="cursor-pointer" onClick={() => {setView("hub"); setSelectedPost(null);}}>
-          <h1 className="text-3xl font-black tracking-tighter hover:text-red-500 transition-all">سيبرها<span className="text-red-600">.INTEL</span></h1>
+          <h1 className="text-3xl font-black tracking-tighter hover:text-red-500 transition-all">سيبرها<span className="text-red-600">.LIVE</span></h1>
         </div>
         <div className="flex gap-8 font-bold text-sm">
-           <button onClick={() => {setView("hub"); setSelectedPost(null);}} className={view === 'hub' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>الثقرات والاخبار </button>
+           <button onClick={() => {setView("hub"); setSelectedPost(null);}} className={view === 'hub' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>اخر الاخبار </button>
            <button onClick={() => setView("vault")} className={view === 'vault' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>مخزن الثغرات</button>
         </div>
       </nav>
