@@ -28,7 +28,6 @@ export default function CyberhaSystem() {
   const [showCookieBanner, setShowCookieBanner] = useState(false);
 
   useEffect(() => {
-    // 1. جلب الأخبار بشكل منفصل
     const fetchNews = async () => {
       const FEEDS = [
         "https://thehackernews.com/rss",
@@ -51,20 +50,17 @@ export default function CyberhaSystem() {
       finally { setNewsLoading(false); }
     };
 
-    // 2. جلب الثغرات العالمية (CISA KEV) بشكل منفصل
     const fetchVault = async () => {
       try {
-        // نستخدم AllOrigins لتخطي مشكلة الـ CORS وزيادة السرعة
         const vRes = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"));
         const vJson = await vRes.json();
         const vData = JSON.parse(vJson.contents);
-        const mappedVault = vData.vulnerabilities.slice(0, 20).map((v: any) => ({
+        setVault(vData.vulnerabilities.slice(0, 20).map((v: any) => ({
           cveID: v.cveID,
           vulnerabilityName: v.vulnerabilityName,
           shortDescription: v.shortDescription,
           date: v.dateAdded
-        }));
-        setVault(mappedVault);
+        })));
       } catch (e) { console.error("Vault Error:", e); }
       finally { setVaultLoading(false); }
     };
@@ -79,26 +75,26 @@ export default function CyberhaSystem() {
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-red-600" dir="rtl">
       
-      {/* 🔴 Ticker - يعمل بمجرد تحميل أول خبر */}
-      <div className="bg-red-600 py-2 overflow-hidden sticky top-0 z-50 shadow-2xl h-10 flex items-center">
-        <div className="flex animate-marquee whitespace-nowrap text-[14px] font-black italic">
+      {/* 🔴 Ticker - Slowed down to 60s */}
+      <div className="bg-red-600 py-2 overflow-hidden sticky top-0 z-50 shadow-2xl h-10 flex items-center border-b border-black/20">
+        <div className="flex animate-marquee whitespace-nowrap text-[13px] font-black italic tracking-wider">
           {newsLoading ? (
-            <span className="px-10">جاري الاتصال بالأقمار الصناعية لرفع البيانات...</span>
+            <span className="px-10 uppercase">جاري الاتصال بالقنوات العالمية المشفرة...</span>
           ) : (
             news.slice(0, 10).map((n, i) => (
-              <span key={i} className="px-10 uppercase">عاجل :: {n.source} :: {n.title}</span>
+              <span key={i} className="px-10">عاجل :: {n.source} :: {n.title} [إصدار 2026]</span>
             ))
           )}
         </div>
       </div>
 
-      <nav className="p-8 max-w-7xl mx-auto flex justify-between items-center border-b border-white/5">
+      <nav className="p-8 max-w-7xl mx-auto flex justify-between items-center">
         <div className="cursor-pointer" onClick={() => {setView("hub"); setSelectedPost(null);}}>
-          <h1 className="text-3xl font-black tracking-tighter hover:text-red-500 transition-all">سيبرها<span className="text-red-600">.INTEL</span></h1>
+          <h1 className="text-3xl font-black tracking-tighter">سيبرها<span className="text-red-600">.INTEL</span></h1>
         </div>
-        <div className="flex gap-8 font-bold text-sm">
-           <button onClick={() => {setView("hub"); setSelectedPost(null);}} className={view === 'hub' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>مركز العمليات</button>
-           <button onClick={() => setView("vault")} className={view === 'vault' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>مخزن الثغرات</button>
+        <div className="flex gap-10 font-black text-[12px] uppercase tracking-[0.2em]">
+           <button onClick={() => {setView("hub"); setSelectedPost(null);}} className={view === 'hub' ? 'text-red-600' : 'text-slate-500 hover:text-white transition-colors'}>العمليات الميدانية</button>
+           <button onClick={() => setView("vault")} className={view === 'vault' ? 'text-red-600' : 'text-slate-500 hover:text-white transition-colors'}>الأرشيف السيادي</button>
         </div>
       </nav>
 
@@ -106,40 +102,37 @@ export default function CyberhaSystem() {
         {view === "hub" && !selectedPost && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-               {/* مولد المفاتيح */}
-               <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2rem] shadow-2xl hover:border-red-600/20 transition-all">
-                  <h3 className="text-red-600 text-xs font-black mb-4 uppercase tracking-widest">// بروتوكول التشفير السيادي</h3>
-                  <div className="bg-black p-6 rounded-xl text-red-500 font-mono mb-6 text-center break-all border border-white/5 min-h-[80px] flex items-center justify-center text-lg shadow-inner">
-                    {generatedPass || "••••-••••-••••"}
+               <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[2.5rem] shadow-2xl">
+                  <h3 className="text-red-600 text-[15px] font-black mb-6 uppercase tracking-[0.3em]">PROT-KEY اشكال كلمات المرور القوية</h3>
+                  <div className="bg-black p-8 rounded-2xl text-red-500 font-mono mb-8 text-center break-all border border-red-600/10 min-h-[100px] flex items-center justify-center text-xl shadow-inner">
+                    {generatedPass || "0000-0000-0000-0000"}
                   </div>
-                  <button onClick={() => setGeneratedPass(Math.random().toString(36).slice(-12) + Math.random().toString(36).toUpperCase().slice(-12))} className="w-full py-4 bg-red-600 rounded-xl font-black hover:bg-white hover:text-black transition-all shadow-lg shadow-red-600/20">توليد مفتاح سيادي</button>
+                  <button onClick={() => setGeneratedPass(Math.random().toString(36).slice(-8) + "-" + Math.random().toString(36).toUpperCase().slice(-8) + "-" + Math.random().toString(36).slice(-8))} className="w-full py-5 bg-red-600 rounded-2xl font-black hover:bg-white hover:text-black transition-all active:scale-95 shadow-lg shadow-red-600/20 uppercase text-sm">إصدار مفتاح وصول</button>
                </div>
 
-               {/* الرادار */}
-               <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2rem] shadow-2xl hover:border-red-600/20 transition-all">
-                  <h3 className="text-red-600 text-xs font-black mb-4 uppercase tracking-widest">// رادار تحليل التهديدات</h3>
-                  <input id="uScan" type="text" placeholder="أدخل رابطاً للفحص..." className="w-full bg-black border border-white/10 p-4 rounded-xl mb-6 text-sm outline-none focus:border-red-600 transition-all font-mono text-center" />
+               <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[2.5rem] shadow-2xl">
+                  <h3 className="text-red-600 text-[15px] font-black mb-6 uppercase tracking-[0.3em]">SCAN-RADAR // رادار كشف التهديدات</h3>
+                  <input id="uScan" type="text" placeholder="https://threat-actor.com" className="w-full bg-black border border-white/10 p-5 rounded-2xl mb-8 text-sm outline-none focus:border-red-600 transition-all font-mono text-center placeholder:text-slate-800" />
                   <button onClick={() => {
                     const u = (document.getElementById('uScan') as HTMLInputElement).value;
                     if(u) window.open(`https://www.virustotal.com/gui/search/${encodeURIComponent(u)}`, '_blank');
-                  }} className="w-full py-4 bg-red-600/10 border border-red-600 text-red-600 rounded-xl font-black hover:bg-red-600 hover:text-white transition-all">بدء الفحص الراداري</button>
+                  }} className="w-full py-5 bg-transparent border-2 border-red-600 text-red-600 rounded-2xl font-black hover:bg-red-600 hover:text-white transition-all active:scale-95 uppercase text-sm">بدء المسح الراداري</button>
                </div>
             </div>
 
-            {/* قسم الأخبار مع حالة التحميل */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {newsLoading ? (
-                [1,2,3,4,5,6].map(i => (
-                  <div key={i} className="bg-[#0a0a0a] h-64 rounded-[2.5rem] animate-pulse border border-white/5"></div>
-                ))
+                [1,2,3].map(i => <div key={i} className="bg-[#0a0a0a] h-72 rounded-[3rem] animate-pulse border border-white/5"></div>)
               ) : (
                 news.map((n, i) => (
-                  <div key={i} onClick={() => setSelectedPost(n)} className="group bg-[#0a0a0a] rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 hover:border-red-600/50 transition-all shadow-xl">
-                    <div className="h-48 overflow-hidden relative">
-                      <div className="absolute top-4 right-4 bg-red-600 px-3 py-1 rounded-full text-[10px] font-bold z-10">{n.source}</div>
-                      <img src={n.img} className="w-full h-full object-cover opacity-30 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" alt="Intel" loading="lazy" />
+                  <div key={i} onClick={() => setSelectedPost(n)} className="group bg-[#0a0a0a] rounded-[3rem] overflow-hidden cursor-pointer border border-white/5 hover:border-red-600/50 transition-all duration-500 shadow-xl">
+                    <div className="h-56 overflow-hidden relative">
+                      <div className="absolute top-6 right-6 bg-red-600 px-4 py-1 rounded-full text-[9px] font-black z-10 shadow-xl">{n.source}</div>
+                      <img src={n.img} className="w-full h-full object-cover opacity-20 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" alt="Intel" />
                     </div>
-                    <div className="p-8 text-right"><h3 className="font-bold text-lg leading-tight group-hover:text-red-500 transition-colors line-clamp-2">{n.title}</h3></div>
+                    <div className="p-10 text-right">
+                      <h3 className="font-black text-xl leading-tight group-hover:text-red-500 transition-colors line-clamp-2">{n.title}</h3>
+                    </div>
                   </div>
                 ))
               )}
@@ -148,23 +141,26 @@ export default function CyberhaSystem() {
         )}
 
         {view === "vault" && (
-          <div className="animate-in fade-in duration-700">
-             <h2 className="text-3xl font-black mb-10 border-r-4 border-red-600 pr-6 uppercase tracking-tighter">سجل الثغرات العالمية (CISA KEV)</h2>
-             <div className="grid gap-4">
+          <div className="animate-in fade-in slide-in-from-bottom-5 duration-1000">
+             <div className="mb-16 border-r-8 border-red-600 pr-8">
+               <h2 className="text-5xl font-black uppercase tracking-tighter">سجل الثغرات (CISA)</h2>
+               <p className="text-slate-500 mt-4 font-bold text-sm">قاعدة بيانات الثغرات المستغلة عالمياً - تحديث فوري 2026</p>
+             </div>
+             <div className="grid gap-6">
                 {vaultLoading ? (
-                   [1,2,3,4].map(i => <div key={i} className="h-32 bg-[#0a0a0a] rounded-[2rem] animate-pulse border border-white/5"></div>)
+                   [1,2,3,4].map(i => <div key={i} className="h-40 bg-[#0a0a0a] rounded-[2.5rem] animate-pulse"></div>)
                 ) : (
                   vault.map((v, i) => (
-                    <div key={i} className="bg-[#0a0a0a] p-8 rounded-[2rem] border border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 hover:bg-black hover:border-red-600/30 transition-all">
+                    <div key={i} className="bg-[#0a0a0a] p-10 rounded-[3rem] border border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 hover:bg-black hover:border-red-600/30 transition-all shadow-2xl">
                       <div className="text-right w-full">
-                        <div className="flex items-center gap-3 mb-2">
-                           <span className="text-red-600 font-mono text-sm font-bold bg-red-600/10 px-3 py-1 rounded-md">{v.cveID}</span>
-                           <span className="text-slate-600 text-[10px] font-bold uppercase tracking-widest">{v.date}</span>
+                        <div className="flex items-center gap-4 mb-4">
+                           <span className="text-red-600 font-mono text-sm font-black bg-red-600/10 px-4 py-1 rounded-lg border border-red-600/20">{v.cveID}</span>
+                           <span className="text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">{v.date}</span>
                         </div>
-                        <h4 className="text-xl font-bold">{v.vulnerabilityName}</h4>
-                        <p className="text-slate-500 text-sm mt-2 line-clamp-2 italic">{v.shortDescription}</p>
+                        <h4 className="text-2xl font-black tracking-tight">{v.vulnerabilityName}</h4>
+                        <p className="text-slate-500 text-sm mt-4 leading-relaxed italic">{v.shortDescription}</p>
                       </div>
-                      <a href={`https://nvd.nist.gov/vuln/detail/${v.cveID}`} target="_blank" rel="noreferrer" className="bg-white/5 hover:bg-red-600 px-8 py-4 rounded-xl font-black transition-all whitespace-nowrap text-sm uppercase">تحليل تقني</a>
+                      <a href={`https://nvd.nist.gov/vuln/detail/${v.cveID}`} target="_blank" rel="noreferrer" className="bg-white text-black hover:bg-red-600 hover:text-white px-10 py-5 rounded-2xl font-black transition-all whitespace-nowrap text-xs uppercase shadow-xl">تحليل المتجهات</a>
                     </div>
                   ))
                 )}
@@ -173,77 +169,87 @@ export default function CyberhaSystem() {
         )}
 
         {selectedPost && (
-          <div className="max-w-4xl mx-auto animate-in slide-in-from-bottom-8">
-            <button onClick={() => setSelectedPost(null)} className="text-red-600 mb-8 font-black text-sm uppercase tracking-widest flex items-center gap-2 hover:gap-4 transition-all"><span>←</span> عودة لمركز العمليات</button>
-            <h1 className="text-4xl md:text-5xl font-black mb-10 text-right leading-tight italic">{selectedPost.title}</h1>
-            <div className="prose prose-invert max-w-none text-right text-slate-300 text-lg leading-relaxed bg-[#0a0a0a] p-10 rounded-[3rem] border border-white/5 shadow-2xl" dangerouslySetInnerHTML={{ __html: selectedPost.description }} />
+          <div className="max-w-4xl mx-auto animate-in slide-in-from-bottom-10 duration-700">
+            <button onClick={() => setSelectedPost(null)} className="text-red-600 mb-12 font-black text-[10px] uppercase tracking-[0.4em] flex items-center gap-3 hover:gap-6 transition-all"><span>←</span> العودة للعمليات الميدانية</button>
+            <h1 className="text-5xl md:text-7xl font-black mb-12 text-right leading-[1.1] tracking-tighter italic">{selectedPost.title}</h1>
+            <div className="prose prose-invert max-w-none text-right text-slate-300 text-xl leading-relaxed bg-[#0a0a0a] p-12 rounded-[4rem] border border-white/5 shadow-2xl" dangerouslySetInnerHTML={{ __html: selectedPost.description }} />
           </div>
         )}
       </main>
 
       {/* 📜 Footer */}
-      <footer className="py-20 border-t border-white/5 bg-black mt-20">
+      <footer className="py-24 border-t border-white/5 bg-black mt-32">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="flex flex-wrap justify-center gap-10 mb-12 text-sm font-black text-slate-500 uppercase tracking-widest">
-            <button onClick={() => setActiveModal('about')} className="hover:text-red-600 transition-colors">عن سيبرها</button>
-            <button onClick={() => setActiveModal('privacy')} className="hover:text-red-600 transition-colors">الخصوصية</button>
-            <button onClick={() => setActiveModal('terms')} className="hover:text-red-600 transition-colors">القواعد</button>
-            <button onClick={() => setActiveModal('contact')} className="hover:text-red-600 transition-colors">تواصل آمن</button>
+          <div className="flex flex-wrap justify-center gap-12 mb-16 text-[11px] font-black text-slate-600 uppercase tracking-[0.3em]">
+            <button onClick={() => setActiveModal('about')} className="hover:text-red-600 transition-colors">عن المنظومة</button>
+            <button onClick={() => setActiveModal('privacy')} className="hover:text-red-600 transition-colors">بروتوكول البيانات</button>
+            <button onClick={() => setActiveModal('terms')} className="hover:text-red-600 transition-colors">قواعد الاشتباك</button>
+            <button onClick={() => setActiveModal('contact')} className="hover:text-red-600 transition-colors">القناة الآمنة</button>
           </div>
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-px w-20 bg-red-600"></div>
-            <p className="text-[10px] text-slate-800 tracking-[1.2em] font-black italic uppercase">Cyberha Intel Station // 2026</p>
-          </div>
+          <p className="text-[10px] text-slate-800 tracking-[1.5em] font-black italic uppercase">Cyberha Intel Ops // Classified 2026</p>
         </div>
       </footer>
 
       {/* 🛡️ Cookie Banner */}
-{showCookieBanner && (
-  <div className="fixed bottom-6 left-6 right-6 md:left-auto md:max-w-sm bg-red-600 text-white p-6 rounded-[2rem] z-[150] shadow-2xl flex flex-col gap-4 border border-white/20 animate-in slide-in-from-bottom-10">
-    <p className="text-xs font-bold leading-relaxed">
-      تستخدم سيبرها ملفات الكوكيز لكل الاستخدامات وتحسين الأداء الرقمي. استمرارك يعني موافقتك.
-    </p>
-    <button 
-      onClick={() => {
-        // 1. حفظ الاختيار في المتصفح لكي لا يظهر مجدداً
-        localStorage.setItem("cyberha_consent", "true");
-        // 2. إخفاء البنر فوراً من الشاشة
-        setShowCookieBanner(false);
-      }} 
-      className="bg-white text-black py-3 rounded-xl text-[10px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-xl"
-    >
-      موافق، إغلاق التنبيه
-    </button>
-  </div>
-)}
+      {showCookieBanner && (
+        <div className="fixed bottom-8 left-8 right-8 md:left-auto md:max-w-md bg-red-600 text-white p-8 rounded-[3rem] z-[150] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] flex flex-col gap-6 border border-white/20 animate-in slide-in-from-bottom-20">
+          <p className="text-[11px] font-black leading-relaxed uppercase tracking-wider text-center">تستخدم "سيبرها" بروتوكولات الكوكيز المتقدمة لتحليل النشاط السيبراني وضمان استقرار الواجهة البرمجية.</p>
+          <button onClick={() => {localStorage.setItem("cyberha_consent", "true"); setShowCookieBanner(false);}} className="bg-black text-white py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-white hover:text-black transition-all shadow-2xl border border-white/10">تأكيد الهوية والموافقة</button>
+        </div>
+      )}
 
-      {/* 🛡️ Modal System */}
+      {/* 🛡️ Modals - Professional & Strict */}
       {activeModal && (
-        <div className="fixed inset-0 bg-black/98 backdrop-blur-3xl z-[200] flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
-          <div className="bg-[#0a0a0a] border-2 border-red-600/20 max-w-2xl w-full p-10 rounded-[3.5rem] shadow-2xl relative text-right max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <h2 className="text-3xl font-black text-red-600 mb-8 uppercase italic border-b border-red-600/20 pb-4 tracking-tighter">
-              {activeModal === 'privacy' && "بروتوكول الخصوصية"}
-              {activeModal === 'terms' && "اتفاقية الاستخدام"}
-              {activeModal === 'about' && "المنظومة التقنية"}
-              {activeModal === 'contact' && "الاتصال الآمن"}
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[200] flex items-center justify-center p-6" onClick={() => setActiveModal(null)}>
+          <div className="bg-[#0a0a0a] border border-red-600/30 max-w-2xl w-full p-12 rounded-[4rem] shadow-2xl relative text-right max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <h2 className="text-4xl font-black text-red-600 mb-10 uppercase italic border-b-2 border-red-600/10 pb-6 tracking-tighter">
+              {activeModal === 'privacy' && "بروتوكول خصوصية البيانات"}
+              {activeModal === 'terms' && "شروط الاستخدام الصارمة"}
+              {activeModal === 'about' && "منظومة سيبرها الاستخباراتية"}
+              {activeModal === 'contact' && "نقطة الاتصال المشفرة"}
             </h2>
-            <div className="text-slate-300 leading-relaxed text-sm italic space-y-6">
-              {activeModal === 'privacy' && <p>نحن نلتزم بسياسة "شفافية البيانات 2026". نجمع فقط البيانات التقنية لضمان استمرارية الخدمة تحت ظروف الضغط السيبراني العالي.</p>}
-              {activeModal === 'terms' && <p>المنصة مخصصة للمدافعين والباحثين. يمنع منعاً باتاً استخدام المعلومات الواردة في أي غرض عدائي رقمي.</p>}
-              {activeModal === 'about' && <p>سيبرها هي المحطة الرائدة في الشرق الأوسط لمراقبة التهديدات السيبرانية لحظة بلحظة، وتقديم رؤية تكتيكية شاملة للمدافعين.</p>}
-              {activeModal === 'contact' && <p className="text-red-600 font-black text-xl select-all bg-black p-4 rounded-xl border border-white/5">sameaminn@proton.me</p>}
+            
+            <div className="text-slate-400 leading-relaxed text-sm font-medium space-y-8">
+              {activeModal === 'privacy' && (
+                <>
+                  <p><strong className="text-white">أولاً:</strong> نحن لا نقوم بتخزين أي هويات شخصية؛ يتم تشفير كافة طلبات الفحص الراداري عبر قنواتنا الخاصة لضمان عدم تعقب المستخدم.</p>
+                  <p><strong className="text-white">ثانياً:</strong> ملفات الكوكيز المستخدمة هي ملفات تقنية بحتة تهدف لرفع كفاءة استجابة الخادم وتخصيص تدفق الأخبار الاستخباراتية.</p>
+                  <p><strong className="text-white">ثالثاً:</strong> لا يتم مشاركة سجلات الوصول مع أي جهة خارجية إلا في الحالات التي يقتضيها أمن المنظومة الوطني.</p>
+                </>
+              )}
+              {activeModal === 'terms' && (
+                <>
+                  <p><strong className="text-white underline decoration-red-600">القاعدة الأساسية:</strong> يُمنع استخدام أدوات سيبرها (المولد أو الرادار) في أي هجوم سيبراني فعلي. المنصة للاستخدام الدفاعي والبحثي فقط.</p>
+                  <p><strong className="text-white">المسؤولية:</strong> المستخدم وحده يتحمل التبعات القانونية لاستغلال البيانات الواردة في هذا الأرشيف خارج إطار القانون السيبراني المعمول به عالمياً.</p>
+                  <p><strong className="text-white">حق الوصول:</strong> تحتفظ الإدارة بحق حظر أي بروتوكول IP يظهر نشاطاً مريباً أو محاولات عبث بالمنظومة.</p>
+                </>
+              )}
+              {activeModal === 'about' && (
+                <>
+                  <p>تأسست <span className="text-white font-bold">سيبرها (Cyberha)</span> كمنظومة استخباراتية مستقلة تهدف لردم الفجوة المعلوماتية في الشرق الأوسط بين المهاجمين والمدافعين.</p>
+                  <p>نعتمد على دمج تقنيات الذكاء الاصطناعي مع تدفقات البيانات من منظومات (CISA, NVD, MITRE) لنقدم للمختصين رؤية شاملة للتهديدات قبل وقوعها.</p>
+                </>
+              )}
+              {activeModal === 'contact' && (
+                <div className="bg-black p-10 rounded-[2.5rem] border border-red-600/20 text-center shadow-inner">
+                  <p className="mb-6 text-[10px] uppercase tracking-[0.4em] text-slate-600">مفتاح الاتصال المباشر:</p>
+                  <p className="text-red-600 font-black text-2xl select-all tracking-tight">sameaminn@proton.me</p>
+                  <p className="mt-6 text-[10px] text-slate-700 italic">نقبل  الرسائل المشفرة  عبر  ProtonMail.</p>
+                </div>
+              )}
             </div>
-            <button onClick={() => setActiveModal(null)} className="mt-10 w-full py-4 bg-red-600 text-white rounded-2xl font-black uppercase hover:bg-white hover:text-black transition-all">إغلاق القناة</button>
+
+            <button onClick={() => setActiveModal(null)} className="mt-12 w-full py-5 bg-red-600 text-white rounded-2xl font-black uppercase hover:bg-white hover:text-black transition-all shadow-xl text-xs tracking-widest">إغلاق القناة الأمنية</button>
           </div>
         </div>
       )}
 
       <style jsx global>{`
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .animate-marquee { animation: marquee 35s linear infinite; }
-        ::-webkit-scrollbar { width: 5px; }
+        .animate-marquee { animation: marquee 60s linear infinite; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 20px; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       `}</style>
     </div>
