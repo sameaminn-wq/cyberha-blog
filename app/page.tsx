@@ -76,7 +76,7 @@ export default function CyberhaFinalSystem() {
 
   if (loading) return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center font-mono text-red-600" dir="rtl">
-      <div className="text-center tracking-widest animate-pulse font-bold text-2xl uppercase">جاري تشغيل الأنظمة السيادية...</div>
+      <div className="text-center tracking-widest animate-pulse font-bold text-2xl uppercase">جاري تشغيل الانظمة ... ...</div>
     </div>
   );
 
@@ -115,7 +115,7 @@ export default function CyberhaFinalSystem() {
             {/* الأدوات التكتيكية */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative group">
-                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// مولد مفاتيح التشفير</h3>
+                  <h3 className="text-red-600 font-black text-[15px] uppercase mb-6 tracking-widest italic"> مولد مفاتيح التشفير</h3>
                   <div className="bg-black p-5 rounded-2xl text-center text-xl font-mono text-red-500 border border-white/5 mb-6 break-all min-h-[70px] flex items-center justify-center">
                     {generatedPass || "••••••••••••••••"}
                   </div>
@@ -123,7 +123,7 @@ export default function CyberhaFinalSystem() {
                </div>
                
                <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative group overflow-hidden">
-                  <h3 className="text-red-600 font-black text-[12px] uppercase mb-6 tracking-widest italic">// رادار فحص الروابط المشبوهة</h3>
+                  <h3 className="text-red-600 font-black text-[15px] uppercase mb-6 tracking-widest italic"> رادار فحص الروابط المشبوهة</h3>
                   <div className="space-y-6">
                     <input type="text" id="urlScanner" placeholder="أدخل رابط الموقع للفحص..." className="w-full bg-black border border-white/10 p-4 rounded-2xl text-xs text-white placeholder:text-slate-600 focus:border-red-600 outline-none transition-all italic" />
                     <button onClick={() => {
@@ -156,7 +156,7 @@ export default function CyberhaFinalSystem() {
 
         {view === "vault" && (
           <div className="animate-in fade-in duration-1000">
-             <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-12 border-r-4 border-red-600 pr-6">قاعدة بيانات المخزن العالمية</h2>
+             <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-12 border-r-4 border-red-600 pr-6">قاعدة بيانات الثغرات العالمية</h2>
              <div className="grid gap-6">
                 {vault.map((v, i) => (
                   <div key={i} className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2.5rem] hover:border-red-600/40 transition-all group flex flex-col md:flex-row justify-between items-center gap-6">
@@ -190,7 +190,7 @@ export default function CyberhaFinalSystem() {
              <button onClick={() => setActiveModal('terms')} className="hover:text-red-600">الشروط</button>
              <button onClick={() => setActiveModal('contact')} className="hover:text-red-600">اتصل بنا</button>
           </div>
-          <p className="text-[10px] text-slate-900 tracking-[1.5em] font-black uppercase italic">سيبرها للاستخبارات التقنية // 2026</p>
+          <p className="text-[10px] text-slate-900 tracking-[1.5em] font-black uppercase italic">سيبرها للمعلومات التقنية // 2026</p>
       </footer>
 
       {activeModal && (
@@ -201,7 +201,7 @@ export default function CyberhaFinalSystem() {
               </h2>
               <div className="text-slate-300 text-md leading-relaxed space-y-4 italic">
                 {activeModal === 'privacy' && <p>لا نقوم بتخزين أي بيانات. جميع الأدوات تعمل محلياً تماماً.</p>}
-                {activeModal === 'terms' && <p>المنصة للأغراض التعليمية والدفاعية فقط.</p>}
+                {activeModal === 'terms' && <p>المنصة للأغراض التعليمية والتوعوية  فقط ونحن غير مسؤلين عن اي استخدام اخر لها واي مستخدم مسؤل كامل المسؤلية عن استخدمه الشخصي للبيانت والمعلومات.</p>}
                 {activeModal === 'about' && <p>سيبرها هي المحطة الأولى لاستخبارات التهديدات الرقمية.</p>}
                 {activeModal === 'contact' && <p>للتواصل: sameaminn@proton.me</p>}
               </div>
