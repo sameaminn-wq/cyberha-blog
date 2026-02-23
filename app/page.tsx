@@ -38,7 +38,7 @@ export default function CyberhaSystem() {
         ));
         let combined: NewsItem[] = responses.flatMap(data => (data.items || []).map((item: any) => ({
           title: item.title,
-          source: data.feed.title?.split(' - ')[0] || "استخبارات",
+          source: data.feed.title?.split(' - ')[0] || "معلومات",
           pubDate: item.pubDate,
           img: item.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b",
           description: item.description
@@ -68,7 +68,7 @@ export default function CyberhaSystem() {
       <div className="bg-red-600 py-2 overflow-hidden sticky top-0 z-50 shadow-2xl">
         <div className="flex animate-marquee whitespace-nowrap text-[14px] font-black italic">
           {news.slice(0, 8).map((n, i) => (
-            <span key={i} className="px-10">تنبيه استخباراتي عاجل :: {n.source} :: {n.title}</span>
+            <span key={i} className="px-10">تنبيه عاجل :: {n.source} :: {n.title}</span>
           ))}
         </div>
       </div>
@@ -79,21 +79,21 @@ export default function CyberhaSystem() {
           <h1 className="text-3xl font-black tracking-tighter">سيبرها<span className="text-red-600">.INTEL</span></h1>
         </div>
         <div className="flex gap-8 font-bold text-sm uppercase">
-           <button onClick={() => {setView("hub"); setSelectedPost(null);}} className={view === 'hub' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>العمليات</button>
-           <button onClick={() => setView("vault")} className={view === 'vault' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>المخزن</button>
+           <button onClick={() => {setView("hub"); setSelectedPost(null);}} className={view === 'hub' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>اخر اخبار الاختراقات </button>
+           <button onClick={() => setView("vault")} className={view === 'vault' ? 'text-red-600' : 'text-slate-500 hover:text-white'}>مخزن الثغرات العالمية</button>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-12 px-6">
+      <main className="max-w-7xl mx-auto py-12 px-15">
         {view === "hub" && !selectedPost && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2rem] shadow-2xl">
-                  <h3 className="text-red-600 text-xs font-black mb-4 uppercase tracking-widest">// مولد مفاتيح التشفير</h3>
+                  <h3 className="text-red-600 text-xs font-black mb-4 uppercase tracking-widest"> مولد اشكال كلمات المرور القوية</h3>
                   <div className="bg-black p-6 rounded-xl text-red-500 font-mono mb-6 text-center break-all border border-white/5 min-h-[80px] flex items-center justify-center text-lg">
                     {generatedPass || "••••-••••-••••"}
                   </div>
-                  <button onClick={() => setGeneratedPass(Math.random().toString(36).slice(-12) + Math.random().toString(36).toUpperCase().slice(-12))} className="w-full py-4 bg-red-600 rounded-xl font-black hover:bg-white hover:text-black transition-all">توليد مفتاح سيادي</button>
+                  <button onClick={() => setGeneratedPass(Math.random().toString(36).slice(-12) + Math.random().toString(36).toUpperCase().slice(-12))} className="w-full py-4 bg-red-600 rounded-xl font-black hover:bg-white hover:text-black transition-all">توليد مفتاح قوي</button>
                </div>
 
                <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2rem] shadow-2xl">
@@ -122,7 +122,7 @@ export default function CyberhaSystem() {
 
         {view === "vault" && (
           <div className="animate-in fade-in duration-700">
-             <h2 className="text-3xl font-black mb-10 border-r-4 border-red-600 pr-6">قاعدة بيانات الثغرات المستغلة (CISA)</h2>
+             <h2 className="text-3xl font-black mb-10 border-r-4 border-red-600 pr-6">قاعدة بيانات الثغرات العالمية</h2>
              <div className="grid gap-4">
                 {vault.map((v, i) => (
                   <div key={i} className="bg-[#0a0a0a] p-8 rounded-[2rem] border border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 hover:bg-black transition-all">
@@ -176,13 +176,19 @@ export default function CyberhaSystem() {
             
             <div className="text-slate-300 leading-relaxed text-sm italic space-y-4">
               {activeModal === 'about' && (
-                <p>سيبرها هي المحطة الرائدة في الشرق الأوسط لمراقبة استخبارات التهديدات السيبرانية (CTI). نقوم بتحليل البيانات الضخمة من مصادر عالمية لتوفير رؤية استراتيجية لحظية للمدافعين عن الأمن الرقمي.</p>
+                <p>سيبرها هي المحطة الرائدة في الشرق الأوسط لمراقبة ملعومات التهديدات السيبرانية (CTI). نقوم بتحليل البيانات الضخمة من مصادر عالمية لتوفير رؤية استراتيجية لحظية للمدافعين عن الأمن الرقمي.</p>
               )}
               {activeModal === 'privacy' && (
-                <p>وفقاً لتحديثات 2026، المنصة تعتمد سياسة "صفر بيانات". لا يتم تخزين ملفات تعريف الارتباط، ولا يتم تعقب عناوين IP. جميع عمليات المسح والتوليد تتم في ذاكرة المتصفح المؤقتة وتنتهي بإغلاق النافذة.</p>
-              )}
+  <div className="space-y-4">
+    <p className="font-black text-red-500 underline decoration-red-900 underline-offset-8 mb-4 italic">تحديث السياسة: فبراير 2026 - الشفافية التشغيلية.</p>
+    <p><strong className="text-white">1. جمع البيانات المحدود:</strong> نحن نؤمن بالخصوصية، ولكن من أجل استدامة المنصة وتطويرها، قد نقوم بجمع بيانات تقنية غير معرفة للهوية (مثل نوع المتصفح والمنطقة الجغرافية التقريبية) لتحسين أداء النظام.</p>
+    <p><strong className="text-white">2. ملفات تعريف الارتباط (Cookies):</strong> قد تستخدم "سيبرها" أو شركاؤنا من مزودي الخدمات الإعلانية والتحليلية ملفات "كوكيز" تقنية لتقديم محتوى مخصص أو لتحليل حركة المرور. باستخدامك للمنصة، أنت توافق على هذا التفاعل التقني الضروري.</p>
+    <p><strong className="text-white">3. الإعلانات والطرف الثالث:</strong> في حال وجود وحدات إعلانية، قد يقوم مزودو الإعلانات بجمع بيانات لتقديم إعلانات تهمك. نحن نختار شركاءنا بعناية لضمان عدم انتهاك خصوصيتك الصارمة.</p>
+    <p><strong className="text-white">4. أمن المعلومات:</strong> أي بيانات يتم التعامل معها تخضع لبروتوكولات تشفير متقدمة لضمان عدم تسريبها أو وصول جهات غير مصرح لها إليها.</p>
+  </div>
+)}
               {activeModal === 'terms' && (
-                <p>يُحظر استخدام المعلومات الواردة في أي نشاط عدائي. المنصة مخصصة للأغراض البحثية والدفاعية فقط. "سيبرها" غير مسؤولة عن أي سوء استخدام للأدوات التكتيكية المتوفرة.</p>
+                <p>يُحظر استخدام المعلومات الواردة في أي نشاط عدائي. المنصة مخصصة للأغراض البحثية والدفاعية فقط. "سيبرها" غير مسؤولة عن أي سوء استخدام للأدوات واي شي موجود علي الموقع المتوفرة.</p>
               )}
               {activeModal === 'contact' && (
                 <div className="bg-black/50 p-6 rounded-2xl border border-white/5">
