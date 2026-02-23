@@ -57,7 +57,7 @@ export default function CyberhaArabicSystem() {
       {/* 🔴 شريط الأنباء العلوي العريض (خط 16 ولون أحمر) */}
       <div className="bg-red-600 py-3 overflow-hidden sticky top-0 z-[100] shadow-[0_4px_30px_rgba(220,38,38,0.4)]">
         <div className="flex animate-marquee whitespace-nowrap text-[16px] font-black text-white tracking-widest uppercase italic">
-          {news.slice(0, 10).map((item, i) => (
+          {news.slice(0, 6).map((item, i) => (
             <span key={i} className="px-12 flex items-center gap-4">
               <span className="w-2 h-2 bg-white rounded-full animate-ping"></span>
               تحديث أمني عاجل :: {item.source} :: {item.title}
@@ -70,7 +70,7 @@ export default function CyberhaArabicSystem() {
       <nav className="p-8 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 border-b border-white/5">
         <div className="cursor-pointer group" onClick={() => {setView("hub"); setSelectedPost(null);}}>
           <h1 className="text-4xl font-black tracking-tighter text-white group-hover:text-red-500 transition-all">
-            سيبرها<span className="text-red-600">.الاستخبارات</span>
+            سيبرها<span className="text-red-600">.Tec</span>
           </h1>
           <p className="text-[10px] text-slate-500 tracking-[0.5em] uppercase italic">محطة الاستخبارات السيادية</p>
         </div>
