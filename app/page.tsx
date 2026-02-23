@@ -201,7 +201,7 @@ export default function CyberhaSystem() {
 {showCookieBanner && (
   <div className="fixed bottom-6 left-6 right-6 md:left-auto md:max-w-sm bg-red-600 text-white p-6 rounded-[2rem] z-[150] shadow-2xl flex flex-col gap-4 border border-white/20 animate-in slide-in-from-bottom-10">
     <p className="text-xs font-bold leading-relaxed">
-      تستخدم سيبرها ملفات الكوكيز لتحليل البيانات وتحسين الأداء الرقمي. استمرارك يعني موافقتك.
+      تستخدم سيبرها ملفات الكوكيز لتحليل البيانات وتحسين الأداء الرقمي استمرارك يعني موافقتك.
     </p>
     <button 
       onClick={() => {
